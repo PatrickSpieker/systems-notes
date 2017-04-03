@@ -163,6 +163,73 @@
                 * must free malloc'd memory with free()
                 * failing to free is a leak, double freeing is an error
         * Library support: very few C libraries, no built in data structures
-
-
-
+* Arrays + Memory + Pointers : Lecture 2
+    * Declaration vs. Definition
+        * Definition: code for a function, a global variable deinition that 
+        creates storage. Must be exactly one actual definition of each thing
+        * Declaration: description of a thing repeated in all files that use it
+            * a function prototype or external variable via `#include`
+            * often in header files and incorporated via #include
+            * should also `#include` declaration in the file 
+    * Arrays
+        * `type name[size];` ex: `int scores[100];'
+        * can initialize when you declare
+            * `type name[size] = {value, value, ..., value};`
+            * if fewer values 
+        * Don't know own size:
+            * sizeof isn't reliable, only works in some situations
+            * recent versions of C allow array size to be an expression
+            * NOT good practice to put large data in local stack frames
+        * 2D arrays are a thing, but not well implemented
+    * Pointers
+        * There are 2 fundemental parameter-passing schemes
+        * Call by value
+            * parameter is a local variable initialized when the function is called,
+            but has not connection with the calling argument after that
+        * Call by reference
+            * parameter is an alias
+    * Arrays as parameters
+        * arrays are effectively passed by reference (not copied)
+            * array promotion: array name treated as pointer
+        * usually pass the size o/t array as a parameter 
+        * ![Arrays as params](arr_params.png)
+    * Arrays as return values
+        * local variables, including arrays are stack allocated
+        * they disappear when a func returns
+        * Therefore, local arrays can't be safely returned from functions 
+        * solution is to pass in an output parameter 
+    * Memory layout
+        * Generally
+            * OS lets you run multiple processes at once
+            * Application runs within an OS process
+            * OS timeslices between runnable processes
+            * ![Stack Dia](stack_dia.png)
+        * The stack frame
+            * ![sf_dia](sf_dia.png)
+    * Addresses
+        * `&foo` produces the virtual address of foo
+        * `type *name; // declares a pointer`
+        * `type *name = address; // declare and initialize pointer`
+        * A pointer points to somewhere in the processes' virtual address space
+        * `int *p1; // correct - better` 
+        * dereference: access the memory referred to by a pointer
+* Hella Pointers: Lecture 3
+    * Address Space Randomization (ASR)
+        * Linux uses ASR for added security
+        * Randomizes the base o/t stack + shared library (mmap) location
+        * Makes stack-based buffer overflow attacks tougher
+    * Pointer arithmetic
+        * pointer arithmetic obeys pointer types
+        * Note: x86 is little endian
+        * ![Little endian stack](lil_end_stack.png)
+    * Use pointers to pass by reference
+        * the callee still receives a copy of the argument
+            * but the argument is a pointer
+            * the pointer's values points to the variable in the 
+            scope of the caller
+        * gives the callee a way to modify a variable that's in the scope of the caller
+    * Arrays and pointers
+        * a pointer can point to an array element
+        * an array's name can be used as a pointer to it's first element
+        * `pointer[i]` is i element's work of bytes forward from pointer
+        * `[]` syntax for parameter types is just for convenience
